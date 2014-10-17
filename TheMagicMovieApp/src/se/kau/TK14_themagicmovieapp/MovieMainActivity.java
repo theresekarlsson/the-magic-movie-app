@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -17,15 +18,20 @@ import android.widget.SimpleAdapter;
 public class MovieMainActivity extends Activity implements OnClickListener {
 
 	private SearchAndReceive search;
-	private SimpleAdapter aa;				//ändra namn!
+	private SimpleAdapter anAdapter;				//ändra namn!
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_movie_main);
 		
-		View imageSearchButton = findViewById(R.id.imageSearchButton);  
+		View imageSearchButton = findViewById(R.id.imageSearchButton); 
+		Button btnAddToFav = (Button) findViewById(R.id.addToFavBtn);
+		Button btnSearchSim = (Button) findViewById(R.id.searchSimBtn);
+		
 		imageSearchButton.setOnClickListener(this);						//sätter lyssnare på söksymbolen
+		btnAddToFav.setOnClickListener(this);
+		btnSearchSim.setOnClickListener(this);
 		
 		Log.i("MusicApp", "Inne i onCreate.");
 		
@@ -67,11 +73,11 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void displayResult(List<Map<String, String>> result) {
-		aa = new SimpleAdapter(MovieMainActivity.this, result, R.layout.list_layout, new String[] { "Title" }, new int[] { R.id.text1 });
-		ListView lw = (ListView) findViewById(R.id.listView1);
-		lw.setAdapter(aa);
-		lw.setDividerHeight(5);
+	public void displayResult(List<Map<String, String>> resultList) {
+		anAdapter = new SimpleAdapter(MovieMainActivity.this, resultList, R.layout.list_layout, new String[] { "Title" }, new int[] { R.id.text1 });
+		ListView listview = (ListView) findViewById(R.id.listView1);
+		listview.setAdapter(anAdapter);
+		listview.setDividerHeight(5);
 	}
 	
 	@Override
@@ -81,3 +87,4 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 		return true;
 	}
 }
+//TODO fixa så resultatet skrivs ut, inte bara knapparna!!! och sen allt efter det...

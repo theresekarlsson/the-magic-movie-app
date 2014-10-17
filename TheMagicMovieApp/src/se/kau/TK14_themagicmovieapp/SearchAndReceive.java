@@ -27,7 +27,7 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 	MovieMainActivity mma;
 	private String searchString;
 	private String urlAddress = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?";
-	private String searchText;
+	private String responseText;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
 	private String searchCall = urlAddress + apiKey + "&q=";
 	private Map<String, String> item;		//ändra namn!
@@ -44,7 +44,7 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 		Log.i("MusicApp", "Inne i doInBackground.");
 		
 			resultList = new ArrayList<Map<String, String>>();
-			StringBuilder sb = new StringBuilder();
+			StringBuilder string_builder = new StringBuilder();
 			HttpClient client = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(searchCall + searchString);
 			Log.i("MusicApp", httpGet.getURI().toString());
@@ -58,11 +58,12 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 					Log.i("MusicApp", "Status: 200.");
 					HttpEntity entity = response.getEntity();
 					InputStream content = entity.getContent();
+					
 				BufferedReader reader = new BufferedReader(new InputStreamReader(content));
 				String line;
 				
 				while ((line = reader.readLine()) != null) {
-						sb.append(line);
+						string_builder.append(line);
 					}
 				}
 			} catch (ClientProtocolException e) {
@@ -70,10 +71,10 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			searchText = sb.toString();
+			responseText = string_builder.toString();
 			
 			try {
-				JSONObject result = new JSONObject(searchText);
+				JSONObject result = new JSONObject(responseText);
 				JSONArray jsonArray = result.getJSONArray("movies");
 
 				for (int i = 0; i < jsonArray.length(); i++) {

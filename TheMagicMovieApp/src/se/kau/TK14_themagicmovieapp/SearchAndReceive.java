@@ -23,38 +23,46 @@ import android.util.Log;
 
 public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 
-	MovieMainActivity mainactivity;
-	private String searchString;
-	private String urlSearchMovie = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?";
-	//private String urlSearchSimilarMovie = "";
-	private String responseText;
+	private MovieMainActivity mainactivity;
+	private String searchString, sentFrom, url, searchCall, responseText;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
-	private String searchCall = urlSearchMovie + apiKey + "&q=";
-	private Map<String, String> item;		//ändra namn!
+	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
 	
-	public SearchAndReceive(MovieMainActivity mma, String s) {
+	public SearchAndReceive(MovieMainActivity mma, String search, String sender) {
 		this.mainactivity = mma;
-		searchString = s;
-		Log.i("MusicApp", "Inne i SearchAndReceive. Söksträng: " + searchString);
+		searchString = search;
+		sentFrom = sender;
+		
+		Log.i("MusicApp", "Inne i SearchAndReceive");
 	}
 
 	protected Void doInBackground(Void... params) {
 		Log.i("MusicApp", "Inne i doInBackground.");
 		
-			resultList = new ArrayList<Map<String, String>>();
+		resultList = new ArrayList<Map<String, String>>();
+		
+		if (sentFrom == "imageSearchButton") {
+			url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?";
+			searchCall = url + apiKey + "&q=";
+		}
+		else if (sentFrom == "searchSimBtn") {
+			url= "http://api.rottentomatoes.com/api/public/v1.0/movies/770672122/similar.json?";
+			searchCall = url + apiKey;
+			//TODO: film-id måste med?! Men hittar inget id om man bara sökt efter en film.
+		}
 			
-			try {
-				responseText = requestAndResponse().toString();
-				handleJsonResponse();
-				
-			} catch (ClientProtocolException e) { 
-				e.printStackTrace();
-			} catch (IOException e) { 
-				e.printStackTrace(); 
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+		try {
+			responseText = requestAndResponse().toString();
+			handleJsonResponse();
+			
+		} catch (ClientProtocolException e) { 
+			e.printStackTrace();
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
@@ -100,10 +108,10 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			item = new HashMap<String, String>(2);
-			item.put("title", jsonObject.getString("title"));
-			item.put("year", jsonObject.getString("year"));
-			resultList.add(item);
+			listItem = new HashMap<String, String>(2);
+			listItem.put("title", jsonObject.getString("title"));
+			listItem.put("year", jsonObject.getString("year"));
+			resultList.add(listItem);
 		}
 	}
 }

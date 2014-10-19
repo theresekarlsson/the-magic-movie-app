@@ -53,7 +53,8 @@
 		    android:text="@string/addToFav"
 		    android:textSize="12sp"
 		    tools:ignore="ButtonStyle"
-		    android:layout_alignParentLeft="true" />
+		    android:layout_alignParentLeft="true"
+		    android:onClick="onClick" />
 		
     	<Button
             android:id="@+id/searchSimBtn"
@@ -63,6 +64,7 @@
             android:layout_toRightOf="@id/addToFavBtn"
             android:text="@string/searchSim"
             android:textSize="12sp"
-            tools:ignore="ButtonStyle" />
+            tools:ignore="ButtonStyle"
+            android:onClick="onClick" />
     	
 </RelativeLayout>

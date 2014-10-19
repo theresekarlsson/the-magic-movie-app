@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="se.kau.TK14_themagicmovieapp.MovieMainActivity"
-    tools:ignore="ContentDescription" >
+    tools:ignore="ContentDescription"
+     >
 
     <TextView
         android:id="@+id/header"
@@ -16,7 +17,8 @@
         android:layout_height="wrap_content"
         android:text="@string/instruction"
         android:textSize="18dp"
-        tools:ignore="SpUsage" >
+        tools:ignore="SpUsage"
+        android:paddingBottom="5dp" >
 
 	</TextView>
 	

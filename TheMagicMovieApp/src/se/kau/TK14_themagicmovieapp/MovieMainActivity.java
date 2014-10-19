@@ -9,59 +9,104 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-//import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MovieMainActivity extends Activity implements OnClickListener {
 
 	private SearchAndReceive search;
-	private SimpleAdapter anAdapter;				//ändra namn!
+	private SimpleAdapter anAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_movie_main);
-		
-		View imageSearchButton = findViewById(R.id.imageSearchButton); 
-		Button btnAddToFav = (Button) findViewById(R.id.addToFavBtn);
-		Button btnSearchSim = (Button) findViewById(R.id.searchSimBtn);
-		
-		imageSearchButton.setOnClickListener(this);						//sätter lyssnare på söksymbolen
-		btnAddToFav.setOnClickListener(this);
-		btnSearchSim.setOnClickListener(this);
-		
 		Log.i("MusicApp", "Inne i onCreate.");
+		View imageSearchButton = findViewById(R.id.imageSearchButton); 
+		imageSearchButton.setOnClickListener(this);						//sätter lyssnare på söksymbolen
 		
-		//TO DO gör knappar för lägg till favorit och sölk liknande
-		//TO DO sätt lyssnare på dem också
-		
+
 	}
 	@Override
 	public void onClick(View v) {
 		Log.i("MusicApp", "Inne i onClick.");
 		switch (v.getId()) {
-		case R.id.imageSearchButton:
+			case R.id.imageSearchButton:
 			
 			EditText searchFieldInput = (EditText) findViewById(R.id.searchField);
-		
-			String searchInputData = searchFieldInput.getText().toString().replace(' ', '+');
-			search = new SearchAndReceive(MovieMainActivity.this, searchInputData);
+			String searchData = searchFieldInput.getText().toString().replace(' ', '+');
+			search = new SearchAndReceive(MovieMainActivity.this, searchData);
 			search.execute();
-
+			break;
 			/*
-			CharSequence text = "Nu har vi klickat på sök";
-			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
-			toast.show();
+			case R.id.addToFavBtn:
+			break;
+			case R.id.searchSimBtn:
 			break;
 			*/
 		}
 		
 	}
+
+	public void displayResult(List<Map<String, String>> resultList) {
+		Log.i("MusicApp", "Inne i displayResult");
+		ListView listview = (ListView) findViewById(R.id.listView1);
+		
+		/* TODO: Kan jag inte använda samma onClick som när jag söker?? Gillar inte den här lösningen.. Har nu 3 onClick-metoder. FIXA! */
+		anAdapter = new SimpleAdapter(MovieMainActivity.this, resultList, R.layout.list_layout, new String[] { "title", "year" }, new int[] { R.id.text1, R.id.text2 })
+		{
+	        @Override
+	        public View getView (int position, View convertView, ViewGroup parent)
+	        {
+	            View v = super.getView(position, convertView, parent);
+
+	            Button btnAddToFav=(Button)v.findViewById(R.id.addToFavBtn);
+	            btnAddToFav.setOnClickListener(new OnClickListener() {
+
+	                public void onClick(View arg0) {
+	                	// TODO: skapa en lista, lägg till titeln där. Ska man kunna öppna denna lista? Isåfall, ny klass, layout, intent.
+	                	
+	                	CharSequence text = "Added to favourites";
+	                	Toast toast = Toast.makeText(MovieMainActivity.this, text,Toast.LENGTH_SHORT);
+	                	toast.show();
+	                }
+	            });
+	            
+	            Button btnSearchSim=(Button)v.findViewById(R.id.searchSimBtn);
+	            btnSearchSim.setOnClickListener(new OnClickListener() {
+
+	                public void onClick(View arg0) {
+	                	
+	                	/* TODO: hämta texten (=söksträng) från den item man är i/textview det gäller, och anropa searchandreceive. 
+	                	 * Ska söka efter liknande filmer! Liknande i stil!! Om man klickr på searcg en gång funkar det. En gång till
+	                	 * så krashar appen.
+	                	 */
+	                	TextView requestedTitle = (TextView) findViewById(R.id.text1);
+	        			String searchData = requestedTitle.getText().toString().replace(' ', '+');
+	        			search = new SearchAndReceive(MovieMainActivity.this, searchData);
+	        			search.execute();
+	        			
+	                    Toast.makeText(MovieMainActivity.this,"Du har klickat på Search Similar Movies",Toast.LENGTH_SHORT).show();
+	                }
+	            });
+	            return v;
+	        }
+	    };
+		listview.setAdapter(anAdapter);
+		listview.setDividerHeight(5);
+	}
 	
-	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.movie_main, menu);
+		return true;
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
@@ -72,19 +117,4 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	public void displayResult(List<Map<String, String>> resultList) {
-		anAdapter = new SimpleAdapter(MovieMainActivity.this, resultList, R.layout.list_layout, new String[] { "Title" }, new int[] { R.id.text1 });
-		ListView listview = (ListView) findViewById(R.id.listView1);
-		listview.setAdapter(anAdapter);
-		listview.setDividerHeight(5);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.movie_main, menu);
-		return true;
-	}
 }
-//TODO fixa så resultatet skrivs ut, inte bara knapparna!!! och sen allt efter det...

@@ -6,5 +6,6 @@
     <string name="instruction">Insert the name, or part of a name, of a movie.</string>
     <string name="addToFav">Add to favourites</string>
     <string name="searchSim">Search similar movies</string>
-    
+    <string name="title">Title: </string>
+    <string name="year">Released: </string>
 </resources>

@@ -24,7 +24,7 @@ import android.util.Log;
 public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 
 	private MovieMainActivity mainactivity;
-	private String searchString, sentFrom, url, searchCall, responseText;
+	private String searchString, sentFromBtn, searchCall, responseText;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
 	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
@@ -32,24 +32,20 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 	public SearchAndReceive(MovieMainActivity mma, String search, String sender) {
 		this.mainactivity = mma;
 		searchString = search;
-		sentFrom = sender;
-		
-		Log.i("MusicApp", "Inne i SearchAndReceive");
+		sentFromBtn = sender;
 	}
 
 	protected Void doInBackground(Void... params) {
-		Log.i("MusicApp", "Inne i doInBackground.");
+		Log.i("MyMovieApp", "Inne i doInBackground.");
 		
 		resultList = new ArrayList<Map<String, String>>();
 		
-		if (sentFrom == "imageSearchButton") {
-			url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?";
-			searchCall = url + apiKey + "&q=";
+		/* Beroende på vilken knapp som tryckts ska url-förfrågan se olika ut. */
+		if (sentFromBtn == "imageSearchButton") {
+			searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
 		}
-		else if (sentFrom == "searchSimBtn") {
-			url= "http://api.rottentomatoes.com/api/public/v1.0/movies/770672122/similar.json?";
-			searchCall = url + apiKey;
-			//TODO: film-id måste med?! Men hittar inget id om man bara sökt efter en film.
+		else if (sentFromBtn == "searchSimBtn") {
+			searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
 		}
 			
 		try {
@@ -76,11 +72,12 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 		}
 	}
 	
+	/* skickar förfrågan till api:t och mottar svar. */
 	private StringBuilder requestAndResponse() throws ClientProtocolException, IOException {
 		
 		StringBuilder string_builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(searchCall + searchString);
+		HttpGet httpGet = new HttpGet(searchCall);
 		
 		HttpResponse response = client.execute(httpGet);
 		StatusLine statusLine = response.getStatusLine();
@@ -101,6 +98,7 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 		return string_builder;
 	}
 	
+	/* hanterar svar (resultat). Sparar undan de efterfrågade taggarna i en array, som i sin tur läggs i en array. */
 	private void handleJsonResponse() throws JSONException {
 		
 		JSONObject result = new JSONObject(responseText);
@@ -111,7 +109,9 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 			listItem = new HashMap<String, String>(2);
 			listItem.put("title", jsonObject.getString("title"));
 			listItem.put("year", jsonObject.getString("year"));
+			listItem.put("id", jsonObject.getString("id"));
 			resultList.add(listItem);
+			Log.i("MyMovieApp", "listItem: " + listItem);
 		}
 	}
 }

@@ -10,7 +10,7 @@
     tools:context="se.kau.TK14_themagicmovieapp.MovieMainActivity"
     tools:ignore="ContentDescription"
      >
-
+     
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -55,14 +55,39 @@
 		        android:src="@android:drawable/ic_menu_search" />
 			
 			</FrameLayout>
-			
 	</LinearLayout>
+	
+	<RelativeLayout
+	    android:id="@+id/favButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/searchArea"
+		android:padding="5dp"
+
+	    android:layout_centerHorizontal="true"
+	    android:onClick="onClick" >
+
+	    <ImageView
+	        android:id="@+id/star"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/star"
+	        android:layout_centerVertical="true" />
+	    
+	    <TextView 
+	        android:text="@string/favTitle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@id/star"
+	        android:layout_centerVertical="true"
+	        />
+    </RelativeLayout>
 	
 	<ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:layout_below="@id/searchArea" >
+        android:layout_below="@id/favButton" >
     </ListView>
 
 </RelativeLayout>

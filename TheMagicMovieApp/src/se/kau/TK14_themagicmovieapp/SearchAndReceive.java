@@ -40,7 +40,7 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 		
 		resultList = new ArrayList<Map<String, String>>();
 		
-		/* Beroende på vilken knapp som tryckts ska url-förfrågan se olika ut. */
+		/* Beroende på vilken knapp som tryckts ska url:en se olika ut. */
 		if (sentFromBtn == "imageSearchButton") {
 			searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
 		}

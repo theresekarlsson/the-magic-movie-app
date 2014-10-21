@@ -4,7 +4,7 @@
     <string name="app_name">The Magic Movie App</string>
     <string name="action_settings">Settings</string>
     <string name="instruction">Insert the name, or part of a name, of a movie.</string>
-    <string name="favTitle">Go to your favourite movies</string>
+    <string name="favLink">Go to your favourite movies</string>
     <string name="addToFav">Add to favourites</string>
     <string name="searchSim">Similar movies</string>
     <string name="title">Title: </string>

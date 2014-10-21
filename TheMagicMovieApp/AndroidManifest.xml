@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="HandleFavouritesActivity"></activity>
+        <activity android:name="FavouriteMoviesActivity"></activity>
     </application>
 
 </manifest>

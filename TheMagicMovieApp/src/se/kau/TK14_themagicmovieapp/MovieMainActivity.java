@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class MovieMainActivity extends Activity implements OnClickListener {
 
 	private SearchAndReceive search;
-	private HandleFavouritesActivity handleFavs;
+	private HandleFavourites handleFavs;
 	private SimpleAdapter anAdapter;
 	private ListView listviewResults;
 	
@@ -46,16 +46,25 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 			break;
 			
 			case R.id.favButton:
-				Intent intent = new Intent(MovieMainActivity.this, HandleFavouritesActivity.class); 
+				Intent intent = new Intent(MovieMainActivity.this, FavouriteMoviesActivity.class); 
 				startActivity(intent);
 			break;
 			
 			case R.id.addToFavBtn:
-				RelativeLayout itemToAdd = (RelativeLayout)v.getParent();
-				//TODO: skapa favoritlista där filmen läggs till. I egen metod i handleFavourite-klassen.
 				
-				handleFavs.saveFavourite(itemToAdd);
+				RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
+				TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
+		        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
+		        TextView rowId = (TextView)itemToAdd.getChildAt(4);
+		        String title = rowTitle.getText().toString();
+		        String year = rowYear.getText().toString(); 
+		        String id = rowId.getText().toString();
+		        
+		        Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year + ", " + id);
 				
+		        handleFavs = new HandleFavourites(title, year, id);
+				handleFavs.execute();
+			
 				CharSequence text = "Added to favourites";
             	toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
             	toast.show();

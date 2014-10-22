@@ -24,13 +24,20 @@ public class FavouriteMoviesActivity extends Activity implements OnClickListener
 		setContentView(R.layout.activity_favourite_layout);
 		
 		Log.i("MyMovieApp", "Favourites. Inne i onCreate.");
+		
+		displayFavourites();
 	}
 	
 	public void displayFavourites() {
 		
 		Log.i("MyMovieApp", "Favourites. Inne i displayFavourites.");
 		
-		favList = handleFavs.getFavList();
+		try {
+			favList = handleFavs.getFavList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		favAdapter = new SimpleAdapter(FavouriteMoviesActivity.this, favList, R.layout.fav_list_layout, new String[] { "title", "year", "id" }, 
 				new int[] { R.id.favText1, R.id.favText2, R.id.favMovieId });

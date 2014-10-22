@@ -1,6 +1,6 @@
 package se.kau.TK14_themagicmovieapp;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import android.app.Activity;
@@ -18,11 +18,12 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MovieMainActivity extends Activity implements OnClickListener, Serializable {
+public class MovieMainActivity extends Activity implements OnClickListener {
 
 	private SearchAndReceive search;
 	private SimpleAdapter anAdapter;
 	private ListView listviewResults;
+	private List<Map<String, String>> favListToSend;
 	HandleFavourites handleFavs;
 	
 	@Override
@@ -38,6 +39,7 @@ public class MovieMainActivity extends Activity implements OnClickListener, Seri
 		handleFavs = new HandleFavourites();
 		Toast toast;
 		
+		ArrayList<Map<String, String>> favList;
 		switch (v.getId()) {
 			case R.id.imageSearchButton:
 				EditText searchFieldInput = (EditText) findViewById(R.id.searchField);
@@ -48,8 +50,11 @@ public class MovieMainActivity extends Activity implements OnClickListener, Seri
 			break;
 			
 			case R.id.favButton:
+				favListToSend = new ArrayList<Map<String, String>>();
 				Intent intent = new Intent(MovieMainActivity.this, FavouriteMoviesActivity.class); 
+				favListToSend = handleFavs.getFavList();
 				
+				intent.putExtra("List", favListToSend);
 				startActivity(intent);
 			break;
 			

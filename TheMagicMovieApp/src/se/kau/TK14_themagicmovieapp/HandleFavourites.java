@@ -4,36 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.os.AsyncTask;
 import android.util.Log;
 
-
-public class HandleFavourites  extends AsyncTask<Void, Void, Void> {
+public class HandleFavourites  {
 	
-	private FavouriteMoviesActivity handleFavs;
+	private String titleToAdd, yearToAdd, idToAdd;
 	private Map<String, String> favListItem;
 	private List<Map<String, String>> favList;
-	private String titleToAdd, yearToAdd, idToAdd;
 	
-
-	public HandleFavourites(String title, String year, String id) {
-		titleToAdd = title;
-		yearToAdd = year;
-		idToAdd = id;
-	}
-
-	@Override
-	protected Void doInBackground(Void... params) {
-		saveFavourite();
-		return null;
-	}
-	
-	public void saveFavourite() {
+	public void saveFavourite(String title, String year, String id) throws Exception {
 		
 		Log.i("MyMovieApp", "Favourites. Inne i saveFavourite.");
 		
-        favListItem = new HashMap<String, String>(2);
+		titleToAdd = title;
+		yearToAdd = year;
+		idToAdd = id;
+		
+		favListItem = new HashMap<String, String>(2);
 		favListItem.put("title", titleToAdd);
 		favListItem.put("year", yearToAdd);
 		favListItem.put("id", idToAdd);
@@ -43,13 +30,8 @@ public class HandleFavourites  extends AsyncTask<Void, Void, Void> {
 		Log.i("MyMovieApp", "favListItem: " + favListItem);	
 	}
 	
-	protected void onPostExecute(Void results) {
-		try
-		{
-			handleFavs.displayFavourites(favList);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+	public List<Map<String, String>> getFavList() {
+		Log.i("HandleFavourites", "inne i getFavList.");
+		return favList;
 	}
 }

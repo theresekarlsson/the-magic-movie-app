@@ -1,5 +1,6 @@
 package se.kau.TK14_themagicmovieapp;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import android.app.Activity;
@@ -17,12 +18,12 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MovieMainActivity extends Activity implements OnClickListener {
+public class MovieMainActivity extends Activity implements OnClickListener, Serializable {
 
 	private SearchAndReceive search;
-	private HandleFavourites handleFavs;
 	private SimpleAdapter anAdapter;
 	private ListView listviewResults;
+	HandleFavourites handleFavs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		Log.i("MyMovieApp", "Mainklass. Inne i onClick.");
 		String btnClicked = null;
+		handleFavs = new HandleFavourites();
 		Toast toast;
 		
 		switch (v.getId()) {
@@ -47,27 +49,32 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 			
 			case R.id.favButton:
 				Intent intent = new Intent(MovieMainActivity.this, FavouriteMoviesActivity.class); 
+				
 				startActivity(intent);
 			break;
 			
 			case R.id.addToFavBtn:
 				
-				RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
-				TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
-		        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
-		        TextView rowId = (TextView)itemToAdd.getChildAt(4);
-		        String title = rowTitle.getText().toString();
-		        String year = rowYear.getText().toString(); 
-		        String id = rowId.getText().toString();
-		        
-		        Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year + ", " + id);
-				
-		        handleFavs = new HandleFavourites(title, year, id);
-				handleFavs.execute();
-			
-				CharSequence text = "Added to favourites";
-            	toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
-            	toast.show();
+				try {
+					RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
+					TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
+			        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
+			        TextView rowId = (TextView)itemToAdd.getChildAt(4);
+			        String title = rowTitle.getText().toString();
+			        String year = rowYear.getText().toString(); 
+			        String id = rowId.getText().toString();
+	            	
+	            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year + ", " + id);
+					handleFavs.saveFavourite(title, year, id);
+					
+					CharSequence text = "You added " + title + " to favourites";
+			    	toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
+			    	toast.show();
+				}
+				// TODO: Fixa felhantering!
+				catch (Exception e) {
+					Log.i("MyMovieApp", e.getMessage());
+				}
 			break;
 			
 			case R.id.searchSimBtn:

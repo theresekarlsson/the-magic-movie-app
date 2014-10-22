@@ -11,13 +11,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 public class FavouriteMoviesActivity extends Activity implements OnClickListener {
 	
 	private HandleFavourites handleFavs;
 	private ListView listviewFavourites;
-	private Map<String, String> favListItem;
 	private List<Map<String, String>> favList;
 	private SimpleAdapter favAdapter;
 	
@@ -26,26 +24,20 @@ public class FavouriteMoviesActivity extends Activity implements OnClickListener
 		setContentView(R.layout.activity_favourite_layout);
 		
 		Log.i("MyMovieApp", "Favourites. Inne i onCreate.");
-		
-		//displayFavourites();
 	}
 	
-	public void displayFavourites(List<Map<String, String>> listWithFavourites) {
+	public void displayFavourites() {
 		
 		Log.i("MyMovieApp", "Favourites. Inne i displayFavourites.");
-		favList = listWithFavourites;
-		if (!favList.isEmpty()) {
-			favAdapter = new SimpleAdapter(FavouriteMoviesActivity.this, favList, R.layout.fav_list_layout, new String[] { "title", "year", "id" }, 
-					new int[] { R.id.favText1, R.id.favText2, R.id.favMovieId });
-			
-			listviewFavourites = (ListView) findViewById(R.id.listView2);
-			listviewFavourites.setAdapter(favAdapter);
-			listviewFavourites.setDividerHeight(5);
-		}
-		else {
-			Toast toast = Toast.makeText(FavouriteMoviesActivity.this, "You have no favourites at the moment.", Toast.LENGTH_SHORT);
-        	toast.show();
-		}
+		
+		favList = handleFavs.getFavList();
+		
+		favAdapter = new SimpleAdapter(FavouriteMoviesActivity.this, favList, R.layout.fav_list_layout, new String[] { "title", "year", "id" }, 
+				new int[] { R.id.favText1, R.id.favText2, R.id.favMovieId });
+		
+		listviewFavourites = (ListView) findViewById(R.id.listView2);
+		listviewFavourites.setAdapter(favAdapter);
+		listviewFavourites.setDividerHeight(5);
 	}
 	
 	@Override

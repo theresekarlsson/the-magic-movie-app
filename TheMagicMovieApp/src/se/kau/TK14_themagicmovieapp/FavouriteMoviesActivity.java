@@ -1,8 +1,10 @@
 package se.kau.TK14_themagicmovieapp;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +16,6 @@ import android.widget.SimpleAdapter;
 
 public class FavouriteMoviesActivity extends Activity implements OnClickListener {
 	
-	private HandleFavourites handleFavs;
 	private ListView listviewFavourites;
 	private List<Map<String, String>> favList;
 	private SimpleAdapter favAdapter;
@@ -22,32 +23,27 @@ public class FavouriteMoviesActivity extends Activity implements OnClickListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_favourite_layout);
-		
 		Log.i("MyMovieApp", "Favourites. Inne i onCreate.");
 		
-		displayFavourites();
-	}
-	
-	public void displayFavourites() {
-		
-		Log.i("MyMovieApp", "Favourites. Inne i displayFavourites.");
+		Intent intent = getIntent();
+		HandleFavourites handleFavs = (HandleFavourites) intent.getSerializableExtra("HandleFavourites");
 		
 		try {
 			favList = handleFavs.getFavList();
+		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		favAdapter = new SimpleAdapter(FavouriteMoviesActivity.this, favList, R.layout.fav_list_layout, new String[] { "title", "year", "id" }, 
-				new int[] { R.id.favText1, R.id.favText2, R.id.favMovieId });
+
+		favAdapter = new SimpleAdapter(FavouriteMoviesActivity.this, favList, R.layout.fav_list_layout, new String[] { "title", "year" }, 
+				new int[] { R.id.favText1, R.id.favText2 });
 		
 		listviewFavourites = (ListView) findViewById(R.id.listView2);
 		listviewFavourites.setAdapter(favAdapter);
 		listviewFavourites.setDividerHeight(5);
 	}
 	
-	@Override
 	public void onClick(View v) {
 		Log.i("MyMovieApp", "Favourites. Inne i onClick.");
 		finish();

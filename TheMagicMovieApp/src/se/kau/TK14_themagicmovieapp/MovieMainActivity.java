@@ -1,6 +1,5 @@
 package se.kau.TK14_themagicmovieapp;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import android.app.Activity;
@@ -20,75 +19,66 @@ import android.widget.Toast;
 
 public class MovieMainActivity extends Activity implements OnClickListener {
 
-	private SearchAndReceive search;
 	private SimpleAdapter anAdapter;
 	private ListView listviewResults;
-	private List<Map<String, String>> favListToSend;
-	HandleFavourites handleFavs;
+	private SearchAndReceive search;
+	private SearchSimilarMovie search_similar_movie;
+	private HandleFavourites handleFavs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_movie_main);
-		Log.i("MyMovieApp", "Inne i onCreate.");
+		handleFavs = new HandleFavourites();
 	}
+	
 	@Override
 	public void onClick(View v) {
 		Log.i("MyMovieApp", "Mainklass. Inne i onClick.");
 		String btnClicked = null;
-		handleFavs = new HandleFavourites();
-		Toast toast;
 		
-		ArrayList<Map<String, String>> favList;
+		
 		switch (v.getId()) {
 			case R.id.imageSearchButton:
 				EditText searchFieldInput = (EditText) findViewById(R.id.searchField);
-				String searchData = searchFieldInput.getText().toString().replace(' ', '+');
+				String searchMovie = searchFieldInput.getText().toString().replace(' ', '+');
 		        btnClicked = "imageSearchButton";
-				search = new SearchAndReceive(MovieMainActivity.this, searchData, btnClicked);
+				search = new SearchAndReceive(MovieMainActivity.this, searchMovie, btnClicked);
 				search.execute();
 			break;
 			
 			case R.id.favButton:
-				favListToSend = new ArrayList<Map<String, String>>();
-				Intent intent = new Intent(MovieMainActivity.this, FavouriteMoviesActivity.class); 
-				favListToSend = handleFavs.getFavList();
-				
-				intent.putExtra("List", favListToSend);
+				Intent intent = new Intent(MovieMainActivity.this, FavouriteMoviesActivity.class);
+				intent.putExtra("HandleFavourites", handleFavs);
 				startActivity(intent);
 			break;
 			
 			case R.id.addToFavBtn:
-				
+			
+				RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
+				TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
+		        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
+		        String title = rowTitle.getText().toString();
+		        String year = rowYear.getText().toString(); 
+            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year);
+            	
 				try {
-					RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
-					TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
-			        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
-			        TextView rowId = (TextView)itemToAdd.getChildAt(4);
-			        String title = rowTitle.getText().toString();
-			        String year = rowYear.getText().toString(); 
-			        String id = rowId.getText().toString();
-	            	
-	            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year + ", " + id);
-					handleFavs.saveFavourite(title, year, id);
-					
-					CharSequence text = "You added " + title + " to favourites";
-			    	toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
-			    	toast.show();
+					handleFavs.saveFavourite(title, year);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				// TODO: Fixa felhantering!
-				catch (Exception e) {
-					Log.i("MyMovieApp", e.getMessage());
-				}
+				
+				CharSequence text = "You added " + title + " to your favourites";
+		    	Toast toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
+		    	toast.show();
 			break;
 			
 			case R.id.searchSimBtn:
 				RelativeLayout itemRow = (RelativeLayout)v.getParent();
 		        TextView rowChild = (TextView)itemRow.getChildAt(4);
 		        String movieId = rowChild.getText().toString();
-		        btnClicked = "searchSimBtn";
-				search = new SearchAndReceive(MovieMainActivity.this, movieId, btnClicked);
-				search.execute();
+		        search_similar_movie = new SearchSimilarMovie(MovieMainActivity.this, movieId);
+		        search_similar_movie.execute();
 			break;
 		}
 	

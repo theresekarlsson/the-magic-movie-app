@@ -23,20 +23,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
-public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
+public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 
 	private MovieMainActivity mainactivity;
-	private String searchString, sentFromBtn, searchCall, responseText;
+	private String searchString, searchCall, responseText;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
 	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
 	LinearLayout progressBar;
 	
 	
-	public SearchAndReceive(MovieMainActivity mma, String search, String sender) {
+	public SearchSimilarMovie(MovieMainActivity mma, String search) {
 		this.mainactivity = mma;
 		searchString = search;
-		sentFromBtn = sender;
 		progressBar = (LinearLayout) mma.findViewById(R.id.progressbar_frame);
 	}
 
@@ -44,15 +43,8 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 		Log.i("MyMovieApp", "Inne i doInBackground.");
 		
 		resultList = new ArrayList<Map<String, String>>();
-		
-		/* Beroende på vilken knapp som tryckts ska url:en se olika ut. */
-		if (sentFromBtn == "imageSearchButton") {
-			searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
-		}
-		else if (sentFromBtn == "searchSimBtn") {
-			searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
-		}
-			
+		searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
+	
 		try {
 			responseText = requestAndResponse().toString();
 			handleJsonResponse();

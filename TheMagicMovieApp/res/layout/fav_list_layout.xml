@@ -47,14 +47,4 @@ android:paddingBottom="5dp" >
 		android:layout_below="@id/favText1"
 		android:layout_marginRight="5dp" >
 	</TextView>
-	
-	<TextView 
-	    android:id="@+id/favMovieId"
-	    android:textColor="@color/transparent"
-		android:textSize="16sp"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/favText2"
-		android:layout_below="@id/favText1">
-	</TextView>
 </RelativeLayout>

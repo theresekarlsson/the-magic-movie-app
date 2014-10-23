@@ -35,7 +35,6 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Log.i("MyMovieApp", "MovieMainActivity. Inne i onClick.");
-
 		switch (v.getId()) {
 		
 			case R.id.favButton:
@@ -56,6 +55,7 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 				RelativeLayout itemRow = (RelativeLayout)v.getParent();
 		        TextView rowChild = (TextView)itemRow.getChildAt(4);
 		        String movieId = rowChild.getText().toString();
+		        Log.i("MyMovieApp", "MovieMainActivity. Söksträng: " + movieId);
 		        search_similar_movie = new SearchSimilarMovie(MovieMainActivity.this, movieId);
 		        search_similar_movie.execute();
 			break;
@@ -81,11 +81,12 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 		}
 	
 	}
-/* Presenterar sökresultatet i en lista på skärmen. */
+	/* Tar emot och presenterar sökresultatet i en listview. */
 	public void displayResult(List<Map<String, String>> resultList) {
 		Log.i("MyMovieApp", "Main. Inne i displayResult");
 		
-		anAdapter = new SimpleAdapter(MovieMainActivity.this, resultList, R.layout.list_layout, new String[] { "title", "year", "id" }, 
+		anAdapter = new SimpleAdapter(MovieMainActivity.this, resultList, R.layout.list_layout, 
+		        new String[] { "title", "year", "id" }, 
 				new int[] { R.id.text1, R.id.text2, R.id.movieId });
 		listviewResults = (ListView) findViewById(R.id.listView1);
 		listviewResults.setAdapter(anAdapter);

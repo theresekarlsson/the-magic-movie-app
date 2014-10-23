@@ -103,6 +103,7 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 	
 	/* hanterar svar (resultat). Sparar undan de efterfrågade taggarna i en array, som i sin tur läggs i en array. */
 	private void handleJsonResponse() throws JSONException {
+		//TODO: hantera fler exceptions kanske? t.ex. om man inte får åtkomst till api:t alls (ingen mottagning)
 		
 		JSONObject result = new JSONObject(responseText);
 		JSONArray jsonArray = result.getJSONArray("movies");

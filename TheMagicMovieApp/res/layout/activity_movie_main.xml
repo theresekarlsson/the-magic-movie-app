@@ -86,11 +86,12 @@
 	<LinearLayout 
 	    android:id="@+id/progressbar_frame"
 	    android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone" 
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:layout_below="@id/favButton">
 	    
 	    <ProgressBar
 		    android:id="@+id/progressbar"

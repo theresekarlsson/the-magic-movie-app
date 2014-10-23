@@ -21,56 +21,35 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 
 	private SimpleAdapter anAdapter;
 	private ListView listviewResults;
-	private SearchAndReceive search;
+	private SearchMovie search_movie;
 	private SearchSimilarMovie search_similar_movie;
-	private HandleFavourites handleFavs;
+	private HandleFavourites handle_favs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_movie_main);
-		handleFavs = new HandleFavourites();
+		handle_favs = new HandleFavourites();
 	}
 	
 	@Override
 	public void onClick(View v) {
-		Log.i("MyMovieApp", "Mainklass. Inne i onClick.");
-		String btnClicked = null;
-		
-		
+		Log.i("MyMovieApp", "MovieMainActivity. Inne i onClick.");
+
 		switch (v.getId()) {
-			case R.id.imageSearchButton:
-				EditText searchFieldInput = (EditText) findViewById(R.id.searchField);
-				String searchMovie = searchFieldInput.getText().toString().replace(' ', '+');
-		        btnClicked = "imageSearchButton";
-				search = new SearchAndReceive(MovieMainActivity.this, searchMovie, btnClicked);
-				search.execute();
-			break;
-			
+		
 			case R.id.favButton:
 				Intent intent = new Intent(MovieMainActivity.this, FavouriteMoviesActivity.class);
-				intent.putExtra("HandleFavourites", handleFavs);
+				intent.putExtra("HandleFavourites", handle_favs);
 				startActivity(intent);
 			break;
 			
-			case R.id.addToFavBtn:
-			
-				RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
-				TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
-		        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
-		        String title = rowTitle.getText().toString();
-		        String year = rowYear.getText().toString(); 
-            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year);
-            	
-				try {
-					handleFavs.saveFavourite(title, year);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				CharSequence text = "You added " + title + " to your favourites";
-		    	Toast toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
-		    	toast.show();
+			case R.id.imageSearchButton:
+				EditText searchFieldInput = (EditText) findViewById(R.id.searchField);
+				String searchMovie = searchFieldInput.getText().toString().replace(' ', '+');
+				Log.i("MyMovieApp", "MovieMainActivity. Söksträng: " + searchMovie);
+				search_movie = new SearchMovie(MovieMainActivity.this, searchMovie);
+				search_movie.execute();
 			break;
 			
 			case R.id.searchSimBtn:
@@ -79,6 +58,25 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 		        String movieId = rowChild.getText().toString();
 		        search_similar_movie = new SearchSimilarMovie(MovieMainActivity.this, movieId);
 		        search_similar_movie.execute();
+			break;
+			
+			case R.id.addToFavBtn:
+				RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
+				TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
+		        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
+		        String title = rowTitle.getText().toString();
+		        String year = rowYear.getText().toString(); 
+            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year);
+            	
+				try {
+					handle_favs.saveFavourite(title, year);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				CharSequence text = "You added " + title + " to your favourites";
+		    	Toast toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
+		    	toast.show();
 			break;
 		}
 	

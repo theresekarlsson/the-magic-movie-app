@@ -23,37 +23,30 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
-public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
+public class SearchMovie extends AsyncTask<Void, Void, Void> {
 
-	private MovieMainActivity mainactivity;
-	private String searchString, sentFromBtn, searchCall, responseText;
+	private String searchString, searchCall, responseText;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
 	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
-	LinearLayout progressBar;
+	private MovieMainActivity main_activity;
+	private LinearLayout progressBar;
 	
-	
-	public SearchAndReceive(MovieMainActivity mma, String search, String sender) {
-		this.mainactivity = mma;
+	public SearchMovie(MovieMainActivity mma, String search) {
+		this.main_activity = mma;
 		searchString = search;
-		sentFromBtn = sender;
 		progressBar = (LinearLayout) mma.findViewById(R.id.progressbar_frame);
 	}
-
+	
 	protected Void doInBackground(Void... params) {
-		Log.i("MyMovieApp", "Inne i doInBackground.");
+		Log.i("MyMovieApp", "SearchMovie, Inne i doInBackground.");
 		
-		resultList = new ArrayList<Map<String, String>>();
-		
-		/* Beroende på vilken knapp som tryckts ska url:en se olika ut. */
-		if (sentFromBtn == "imageSearchButton") {
-			searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
-		}
-		else if (sentFromBtn == "searchSimBtn") {
-			searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
-		}
-			
+		searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
+
+		Log.i("MyMovieApp", "SearchMovie. " + searchCall);
+
 		try {
+			
 			responseText = requestAndResponse().toString();
 			handleJsonResponse();
 			
@@ -74,7 +67,7 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void results) {
 		try
 		{
-			mainactivity.displayResult(resultList);
+			main_activity.displayResult(resultList);
 			progressBar.setVisibility(View.GONE);
 		}
 		catch (Exception e) {
@@ -113,6 +106,7 @@ public class SearchAndReceive extends AsyncTask<Void, Void, Void> {
 		
 		JSONObject result = new JSONObject(responseText);
 		JSONArray jsonArray = result.getJSONArray("movies");
+		resultList = new ArrayList<Map<String, String>>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);

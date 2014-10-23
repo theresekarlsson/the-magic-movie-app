@@ -42,7 +42,6 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		Log.i("MyMovieApp", "Inne i doInBackground.");
 		
-		resultList = new ArrayList<Map<String, String>>();
 		searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
 	
 		try {
@@ -105,6 +104,7 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 		
 		JSONObject result = new JSONObject(responseText);
 		JSONArray jsonArray = result.getJSONArray("movies");
+		resultList = new ArrayList<Map<String, String>>();
 
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);

@@ -29,7 +29,7 @@ public class FavouriteMoviesActivity extends Activity implements OnClickListener
 		HandleFavourites handleFavs = (HandleFavourites) intent.getSerializableExtra("HandleFavourites");
 		
 		try {
-			favList = handleFavs.getFavList();
+			favList = handleFavs.getFavList(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

@@ -64,12 +64,14 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 				RelativeLayout itemToAdd = (RelativeLayout) v.getParent();
 				TextView rowTitle = (TextView)itemToAdd.getChildAt(1);
 		        TextView rowYear = (TextView)itemToAdd.getChildAt(3);
+		        TextView rowId = (TextView)itemToAdd.getChildAt(4);
 		        String title = rowTitle.getText().toString();
-		        String year = rowYear.getText().toString(); 
-            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year);
+		        String year = rowYear.getText().toString();
+		        String id = rowId.getText().toString();
+            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year + ", " + id);
             	
 				try {
-					handle_favs.saveFavourite(title, year);
+					handle_favs.saveFavourite(this, title, year, id);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

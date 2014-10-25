@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +27,8 @@ import android.widget.LinearLayout;
 public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 
 	private MovieMainActivity mainactivity;
-	private String searchString, responseText;
+	private String searchString, responseText, searchCall;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
-	private String searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
 	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
 	LinearLayout progressBar;
@@ -41,7 +41,7 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 
 	protected Void doInBackground(Void... params) {
 		Log.i("MyMovieApp", "SearchSimilarMovie. doInBackground.");
-
+		searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
 		try {
 			responseText = requestAndResponse().toString();
 			handleJsonResponse();
@@ -72,8 +72,9 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 	}
 	
 	/* skickar förfrågan till api:t och mottar svar. */
-	private StringBuilder requestAndResponse() throws ClientProtocolException, IOException {
+	private StringBuilder requestAndResponse() throws ClientProtocolException, IOException, SocketException {
 		
+		Log.i("MyMovieApp", "SearchSimilarMovie. requestAndResponse.");
 		StringBuilder string_builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(searchCall);
@@ -83,7 +84,7 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 		int statusCode = statusLine.getStatusCode();
 		
 		if (statusCode == 200) {
-			Log.i("MusicApp", "Status: " + statusCode);
+			Log.i("MusicApp", "SearchSimilarMovie. Status: " + statusCode);
 			HttpEntity entity = response.getEntity();
 			InputStream content = entity.getContent();
 			
@@ -100,6 +101,7 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 	/* hanterar svar (resultat). Sparar undan de efterfrågade taggarna i en array, som i sin tur läggs i en array. */
 	private void handleJsonResponse() throws JSONException {
 		
+		Log.i("MyMovieApp", "SearchSimilarMovie. handleResponse.");
 		JSONObject result = new JSONObject(responseText);
 		JSONArray jsonArray = result.getJSONArray("movies");
 		resultList = new ArrayList<Map<String, String>>();

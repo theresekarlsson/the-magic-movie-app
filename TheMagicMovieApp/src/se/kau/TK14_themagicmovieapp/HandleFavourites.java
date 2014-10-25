@@ -26,6 +26,7 @@ public class HandleFavourites implements Serializable  {
 	private String fileName = "my_movie_favourites.txt";
 	private String separator = ";;";
 	
+	/* Skriver favoritlista till fil */
 	public void saveFavourite(MovieMainActivity mma, String title, String year, String id) {
 		
 		Log.i("MyMovieApp", "HandleFavourites. Movie received");
@@ -49,7 +50,7 @@ public class HandleFavourites implements Serializable  {
         } 
 	}
 
-	
+	/* Läser från fil och "packar upp", lägger in i favList */
 	public List<Map<String, String>> getFavList(FavouriteMoviesActivity fma) throws Exception {
 		try {
 	        InputStream inputStream = fma.openFileInput(fileName);

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +26,8 @@ import android.widget.LinearLayout;
 
 public class SearchMovie extends AsyncTask<Void, Void, Void> {
 
-	private String searchString, responseText;
+	private String searchString, responseText, searchCall;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
-	private String searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
 	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
 	private MovieMainActivity main_activity;
@@ -40,8 +40,8 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 	}
 	
 	protected Void doInBackground(Void... params) {
-		Log.i("MyMovieApp", "SearchMovie. doInBackground.");
-
+		Log.i("MyMovieApp", "SearchMovie. doInBackground " + searchString);
+		searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
 		try {
 			responseText = requestAndResponse().toString();
 			handleJsonResponse();
@@ -72,8 +72,9 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 	}
 	
 	/* skickar förfrågan till api:t och mottar svar. */
-	private StringBuilder requestAndResponse() throws ClientProtocolException, IOException {
+	private StringBuilder requestAndResponse() throws ClientProtocolException, IOException, SocketException {
 		
+		Log.i("MyMovieApp", "SearchMovie. requestAndResponse.");
 		StringBuilder string_builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(searchCall);
@@ -83,7 +84,7 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 		int statusCode = statusLine.getStatusCode();
 		
 		if (statusCode == 200) {
-			Log.i("MyMovieApp", "Status: " + statusCode);
+			Log.i("MyMovieApp", "SearchMovie. Status: " + statusCode);
 			HttpEntity entity = response.getEntity();
 			InputStream content = entity.getContent();
 			
@@ -100,6 +101,7 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 	/* hanterar svar (resultat). Sparar undan de efterfrågade taggarna i en array, som i sin tur läggs i en array. */
 	private void handleJsonResponse() throws JSONException {
 		
+		Log.i("MyMovieApp", "SearchMovie. handleResponse.");
 		JSONObject result = new JSONObject(responseText);
 		JSONArray jsonArray = result.getJSONArray("movies");
 		resultList = new ArrayList<Map<String, String>>();

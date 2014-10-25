@@ -26,12 +26,12 @@ import android.widget.LinearLayout;
 public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 
 	private MovieMainActivity mainactivity;
-	private String searchString, searchCall, responseText;
+	private String searchString, responseText;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
+	private String searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
 	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
 	LinearLayout progressBar;
-	
 	
 	public SearchSimilarMovie(MovieMainActivity mma, String search) {
 		this.mainactivity = mma;
@@ -40,10 +40,8 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 	}
 
 	protected Void doInBackground(Void... params) {
-		Log.i("MyMovieApp", "Inne i doInBackground.");
-		
-		searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies/" + searchString + "/similar.json?" + apiKey;
-	
+		Log.i("MyMovieApp", "SearchSimilarMovie. doInBackground.");
+
 		try {
 			responseText = requestAndResponse().toString();
 			handleJsonResponse();
@@ -101,7 +99,6 @@ public class SearchSimilarMovie extends AsyncTask<Void, Void, Void> {
 	
 	/* hanterar svar (resultat). Sparar undan de efterfrågade taggarna i en array, som i sin tur läggs i en array. */
 	private void handleJsonResponse() throws JSONException {
-		//TODO: hantera fler exceptions kanske? t.ex. om man inte får åtkomst till api:t alls (ingen mottagning)
 		
 		JSONObject result = new JSONObject(responseText);
 		JSONArray jsonArray = result.getJSONArray("movies");

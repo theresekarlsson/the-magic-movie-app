@@ -40,22 +40,35 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 			case R.id.favButton:
 				Intent intent = new Intent(MovieMainActivity.this, FavouriteMoviesActivity.class);
 				intent.putExtra("HandleFavourites", handle_favs);
+				Log.i("MyMovieApp", "MovieMainActivity. About to go to FavouriteActivity.");
 				startActivity(intent);
 			break;
 			
 			case R.id.imageSearchButton:
 				EditText searchFieldInput = (EditText) findViewById(R.id.searchField);
-				String searchMovie = searchFieldInput.getText().toString().replace(' ', '+');
-				Log.i("MyMovieApp", "MovieMainActivity. Söksträng: " + searchMovie);
-				search_movie = new SearchMovie(MovieMainActivity.this, searchMovie);
-				search_movie.execute();
+				String searchMovie = searchFieldInput.getText().toString();
+				try {
+					if (searchFieldInput.getText().toString().trim().length() < 1) { //Kollar så rutan inte är tom.
+						throw new NullPointerException();
+					}
+					else {
+						searchMovie.replace(' ', '+');
+						Log.i("MyMovieApp", "MovieMainActivity. Search for movie: " + searchMovie);
+						search_movie = new SearchMovie(MovieMainActivity.this, searchMovie);
+						search_movie.execute();
+					}
+				} catch (NullPointerException e) {
+					CharSequence text = "Insert title/part of title.";
+			    	Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+			    	toast.show();
+				}
 			break;
 			
 			case R.id.searchSimBtn:
 				RelativeLayout itemRow = (RelativeLayout)v.getParent();
 		        TextView rowChild = (TextView)itemRow.getChildAt(4);
 		        String movieId = rowChild.getText().toString();
-		        Log.i("MyMovieApp", "MovieMainActivity. Söksträng: " + movieId);
+		        Log.i("MyMovieApp", "MovieMainActivity. Search similar movie-ID: " + movieId);
 		        search_similar_movie = new SearchSimilarMovie(MovieMainActivity.this, movieId);
 		        search_similar_movie.execute();
 			break;
@@ -68,24 +81,20 @@ public class MovieMainActivity extends Activity implements OnClickListener {
 		        String title = rowTitle.getText().toString();
 		        String year = rowYear.getText().toString();
 		        String id = rowId.getText().toString();
-            	Log.i("MyMovieApp", "Ska läggas till: " + title + ", " + year + ", " + id);
             	
-				try {
-					handle_favs.saveFavourite(this, title, year, id);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				Log.i("MyMovieApp", "MovieMainActivity. About to send movie to HandleFavourites");
+				handle_favs.saveFavourite(this, title, year, id);
 				
-				CharSequence text = "You added " + title + " to your favourites";
-		    	Toast toast = Toast.makeText(MovieMainActivity.this, text, Toast.LENGTH_SHORT);
+		        CharSequence text = "You added " + title + " to your favourites";
+		    	Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
 		    	toast.show();
 			break;
 		}
-	
 	}
+	
 	/* Tar emot och presenterar sökresultatet i en listview. */
 	public void displayResult(List<Map<String, String>> resultList) {
-		Log.i("MyMovieApp", "Main. Inne i displayResult");
+		Log.i("MyMovieApp", "MovieMainActivity. Presenting search result");
 		
 		anAdapter = new SimpleAdapter(MovieMainActivity.this, resultList, R.layout.list_layout, 
 		        new String[] { "title", "year", "id" }, 

@@ -25,8 +25,9 @@ import android.widget.LinearLayout;
 
 public class SearchMovie extends AsyncTask<Void, Void, Void> {
 
-	private String searchString, searchCall, responseText;
+	private String searchString, responseText;
 	private String apiKey = "apikey=rjujpew8zdq758jp9wuvjteq";
+	private String searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
 	private Map<String, String> listItem;
 	private List<Map<String, String>> resultList;
 	private MovieMainActivity main_activity;
@@ -39,14 +40,9 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 	}
 	
 	protected Void doInBackground(Void... params) {
-		Log.i("MyMovieApp", "SearchMovie, Inne i doInBackground.");
-		
-		searchCall = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?" + apiKey + "&q=" + searchString;
-
-		Log.i("MyMovieApp", "SearchMovie. " + searchCall);
+		Log.i("MyMovieApp", "SearchMovie. doInBackground.");
 
 		try {
-			
 			responseText = requestAndResponse().toString();
 			handleJsonResponse();
 			
@@ -87,7 +83,7 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 		int statusCode = statusLine.getStatusCode();
 		
 		if (statusCode == 200) {
-			Log.i("MusicApp", "Status: " + statusCode);
+			Log.i("MyMovieApp", "Status: " + statusCode);
 			HttpEntity entity = response.getEntity();
 			InputStream content = entity.getContent();
 			
@@ -103,7 +99,6 @@ public class SearchMovie extends AsyncTask<Void, Void, Void> {
 	
 	/* hanterar svar (resultat). Sparar undan de efterfrågade taggarna i en array, som i sin tur läggs i en array. */
 	private void handleJsonResponse() throws JSONException {
-		//TODO: hantera fler exceptions kanske? t.ex. om man inte får åtkomst till api:t alls (ingen mottagning)
 		
 		JSONObject result = new JSONObject(responseText);
 		JSONArray jsonArray = result.getJSONArray("movies");

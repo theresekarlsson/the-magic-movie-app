@@ -23,7 +23,7 @@ public class FavouriteMoviesActivity extends Activity implements OnClickListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_favourite_layout);
-		Log.i("MyMovieApp", "Favourites. Inne i onCreate.");
+		Log.i("MyMovieApp", "FavouritesActivity. Inne i onCreate.");
 		
 		Intent intent = getIntent();
 		HandleFavourites handleFavs = (HandleFavourites) intent.getSerializableExtra("HandleFavourites");
